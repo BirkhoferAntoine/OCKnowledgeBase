@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+
+    <head>
+        <title>
+            {{ headTitle }}
+        </title>
+    </head>
+
+    <body>
+
+        <div id="app">
+            <h1>Welcome {{ name }}!</h1> //hello.name
+            {% block body %} {{ body }} {% endblock %}
+        </div>
+
+    </body>
+
+</html>

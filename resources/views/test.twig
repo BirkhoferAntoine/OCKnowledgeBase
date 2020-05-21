@@ -1,0 +1,10 @@
+{% extends 'templates/layout.twig' %}
+
+{% block body %}
+    {{ output }}
+    <h1>User List</h1>
+    <ul>
+        <li>{{ name }}</li>
+        <li>{{ data | json_encode }}</li>
+    </ul>
+{% endblock %}
