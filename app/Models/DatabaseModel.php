@@ -68,10 +68,27 @@ abstract class DatabaseModel
             }
             $stmt = $this->getDbConnection()->prepare($sql);
             $stmt->execute($args);
+
             return $stmt;
         } catch (PDOException $e) {
             if (env('APP_DEBUG', false))
                 return array('response' => false, 'sql' => $sql, 'args' => $args, 'error' => $e->getMessage());
         }
     }
+
+    protected function transaction($sql, $args = []) {
+        $stmt = $this->getDbConnection()->prepare($sql);
+        try {
+            $this->getDbConnection()->beginTransaction();
+            foreach ($args as $row)
+            {
+                $stmt->execute($row);
+            }
+            $this->getDbConnection()->commit();
+        }catch (Exception $e){
+            $this->getDbConnection()->rollback();
+            throw $e;
+        }
+    }
+/**/
 }

@@ -3,9 +3,8 @@
 
 namespace App\Providers;
 
-use App\Models\DatabaseModel;
 use App\Models\UsersModelManager;
-use Slim\Psr7\Factory\ResponseFactory;
+use App\Support\Security;
 use Symfony\Component\Debug\Exception\ClassNotFoundException;
 
 class UsersDatabaseServiceProvider extends ServiceProvider
@@ -15,7 +14,7 @@ class UsersDatabaseServiceProvider extends ServiceProvider
         try {
         $this->app->getContainer()->set(UsersModelManager::class, function()
         {
-            return new UsersModelManager(new ResponseFactory);
+            return new UsersModelManager(new Security());
         });
         } catch (Exception $e) {
             if (env('APP_DEBUG', false))

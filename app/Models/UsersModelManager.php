@@ -3,30 +3,28 @@
 
 namespace App\Models;
 
+use App\Support\Security;
 use PDO;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 
 
 class UsersModelManager extends DatabaseModel
 {
-    public $response;
+    private $_security;
 
-    public function __construct(ResponseFactoryInterface $factory)
+    public function __construct(Security $security)
     {
-        $this->response = $factory->createResponse(200, 'Success');
+        $this->_security = $security;
     }
 
     public function __invoke()
     {
-        // TODO Security
         return $this->getUsersTable();
-        //return $this->response;
     }
 
-    protected function getUsersTable()
+    private function getUsersTable()
     {
-        $req = $this->run('SELECT * FROM `Users`');
+        $sql = 'SELECT * FROM `users` WHERE `users`.`password` = :password';
+        $req = $this->run('SELECT * FROM `users` WHERE `users`.`password` = :password');
         if (isset($req))
         {
             $req->setFetchMode(PDO::FETCH_OBJ);

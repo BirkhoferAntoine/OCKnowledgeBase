@@ -17,21 +17,28 @@ class APIContentModelManager extends DatabaseModel
         $this->_security = &$security;
     }
 
-    private function _getContent()
+    private function _get()
     {
         $security   = &$this    -> _security;
         $get        = $security -> getFilteredGet();
 
         if ($get)
         {
+            if ($get['categories'] === 'true')
+            {
+                $sql = 'SELECT * FROM `categories` ORDER BY `id`';
+                $req = $this->run($sql);
+            }
+            else {
             $sqlParams  = $security -> prepareSQLParameters($get);
             $sqlValues  = $security -> prepareSQLValues($get);
 
-            $sql = 'SELECT * FROM `Content` WHERE ' . $sqlParams . 'ORDER BY `id`';
+            $sql = 'SELECT * FROM `content` WHERE ' . $sqlParams . 'ORDER BY `id`';
             $req = $this->run($sql, $sqlValues);
+            }
         }
         else {
-            $sql = 'SELECT * FROM `Content` ORDER BY `id`';
+            $sql = 'SELECT * FROM `content` ORDER BY `id`';
             $req = $this->run($sql);
         }
 
@@ -62,43 +69,85 @@ class APIContentModelManager extends DatabaseModel
         return $contentTable;
     }
 
-    private function _addContent()
+    private function _add($params)
     {
-        $post = $this->_security->getFilteredPost();
+        $security           = &$this    -> _security;
+        $post               = $security -> getFilteredParams($params);
+        $post['user_name']  = 'Admin';
 
-        if (!empty($post['title@api'] && $post['content@api'])) //todo add token check
+        if (!empty($post['title'] && $post['content'])) //todo add token check
         {
-            $sql = 'INSERT INTO `Content` 
+            $sql = "INSERT INTO `content` 
                         (`id`, `user_name`, `title`, `content`, `date`, `image`, `category`, `sub_category`) 
                     VALUES 
-                        (NULL, :user_name, :title, :content, NULL, :image, :category, :sub_category)';
+                        (NULL, :user_name , :title , :content , NOW() , :image , :category , :sub_category)";
 
-            $args = [
-                'user_name'     => 'Admin',
-                'title'         => $post['title@api'],
-                'content'       => $post['content@api'],
-                'image'         => $post['image@api'],
-                'category'      => $post['category@api'],
-                'sub_category'  => $post['sub_category@api']
-            ];
 
-            $req = $this->run($sql, $args);
-            return $req;
+            return $this->run($sql, $post);
         }
         else {
-            return throw_when(false,'empty post data');
+            throw new Exception('Erreur, requête incorrecte');
         }
     }
 
-    public function getContent()
+    private function _update($params)
     {
-        /*if ($content['column']) return $this->_getColumn($content['column']);*/
-        return $this->_getContent();
+        $security           = &$this    -> _security;
+        $put                = $security -> getFilteredParams($params);
+        $put['user_name']   = 'Admin';
+
+        if ($put['id']) {
+            $sql = "UPDATE `content` SET
+				`user_name` 	= :user_name,
+				`title`         = :title,
+                `content`       = :content,
+                `date`          = NOW(),
+                `image`         = :image, 
+                `category`      = :category, 
+                `sub_category`  = :sub_category
+			    WHERE 
+			    `content`.`id`  = :id";
+
+            return $this->run($sql, $put);
+        }
     }
 
-    public function addContent()
+    private function _delete()
     {
-        return $this->_addContent();
+        $security               = &$this    -> _security;
+        $delete                 = $security -> getFilteredGet();
+
+        if ($delete['category'])
+        {
+            $sql = "DELETE FROM `category` WHERE `category`.`id` = :id";
+            return $this->run($sql, [':id' => $delete['category']]);
+        }
+        if ($delete['content'])
+        {
+            $sql = "DELETE FROM `content` WHERE `content`.`id` = :id";
+            return $this->run($sql, [':id' => $delete['content']]);
+        }
+    }
+
+    public function get()
+    {
+        /*if ($content['column']) return $this->_getColumn($content['column']);*/
+        return $this->_get();
+    }
+
+    public function add($params)
+    {
+        return $this->_add($params);
+    }
+
+    public function update($params) {
+        return $this->_update($params);
+    }
+
+    public function delete()
+    {
+        return $this->_delete();
     }
 }
+
 

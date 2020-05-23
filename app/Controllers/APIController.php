@@ -11,9 +11,9 @@ use Slim\Http\ServerRequest as Request;
 
 class APIController
 {
-    public function get(View $view, APIContentModelManager $modelManager, Security $security, Response $response)
+    public function get(View $view, APIContentModelManager $modelManager)
     {
-        $data       = $modelManager->getContent();
+        $data       = $modelManager->get();
         $payload    = json_encode($data, JSON_PRETTY_PRINT);
 
         return $view('apiGet.twig', [
@@ -23,33 +23,39 @@ class APIController
         );
     }
 
-    public function add(Response $response, APIContentModelManager $modelManager)
+    public function post(Request $request, View $view, APIContentModelManager $modelManager)
     {
-        $add = $modelManager->addContent();/*
-        if ($add['response'] === false) {
-            $response->getBody()->write($add);
-            return $response->withStatus('')*/
+        $add        = $modelManager->add($request->getParams());
+        $payload    = json_encode('Success!', JSON_PRETTY_PRINT);
+
+        return $view('apiPost.twig', [
+            'output' => $payload
+        ],
+            'Content-Type', 'application/json'
+        );
     }
 
-    public function put(Request $request, Response $response, ContentModelManager $modelManager, $id)
+    public function put(Request $request, View $view, APIContentModelManager $modelManager)
     {
-               /*$data = $modelManager();
-               $payload = json_encode($data, JSON_PRETTY_PRINT);
-               $response->getBody()->write($payload);
+        $put        = $modelManager ->update($request->getParams());
+        $payload    = json_encode('Success!', JSON_PRETTY_PRINT);
 
-               return $response->withHeader('Content-Type', 'application/json');
+        return $view('apiPut.twig', [
+            'output' => $payload
+        ],
+            'Content-Type', 'application/json'
+        );
+    }
 
-        $user_name      = $request->getParam('user_name');
-        $title          = $request->getParam('title');
-        $content        = $request->getParam('content');
-        $date           = $request->getParam('date');
+    public function delete(View $view, APIContentModelManager $modelManager)
+    {
+        $delete         = $modelManager ->delete();
+        $payload        = json_encode('Success!', JSON_PRETTY_PRINT);
 
-        $sql = "UPDATE `Content` SET
-				user_name 	= :user_name,
-				title       = :title,
-                content     = :content,
-                date        = :date
-			    WHERE id = :id";
-    */
+        return $view('apiDelete.twig', [
+            'output' => $payload
+        ],
+            'Content-Type', 'application/json'
+        );
     }
 }

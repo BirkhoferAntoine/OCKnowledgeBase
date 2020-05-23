@@ -11,7 +11,12 @@
 
         <div id="app">
             <h1>Welcome {{ name }}!</h1> //hello.name
-            {% block body %} {{ body }} {% endblock %}
+
+            {% block body %}
+                {{ body }}
+                {{ with }}
+            {% endblock %}
+
         </div>
 
     </body>

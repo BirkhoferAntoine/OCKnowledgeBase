@@ -12,6 +12,7 @@ class Security
     private $_filteredPost;
     private $_filteredGet;
     private $_filteredSession;
+    private $_filteredParams;
     private $_argsGet;
     private $_argsPost;
     private $_argsSession;
@@ -70,7 +71,7 @@ class Security
     public function getFilteredPost($key = null)
     {
         $inputFilters           = config('security.post');
-        $this->_filteredPost    = filter_input_array(trim(INPUT_GET), $inputFilters, $this->_add_empty);
+        $this->_filteredPost    = filter_input_array(INPUT_POST, $inputFilters, $this->_add_empty);
 
         if ($key === null)                      return $this->_filteredPost;
         if (isset($this->_filteredPost[$key]))  return $this->_filteredPost[$key];
@@ -88,6 +89,21 @@ class Security
 
         if ($key === null)                      return $this->_filteredGet;
         if (isset($this->_filteredGet[$key]))   return $this->_filteredGet[$key];
+        return null;
+    }
+
+    /**
+     * @param $array
+     * @return mixed|null
+     */
+    public function getFilteredParams($array = null)
+    {
+        if ($array !== null) {
+            $inputFilters                   = config('security.post');
+            $this->_filteredParams          = filter_var_array($array, $inputFilters, $this->_add_empty);
+            return $this->_filteredParams;
+        }
+        if ($array === null)                        return $this->_filteredParams;
         return null;
     }
 
@@ -127,13 +143,14 @@ class Security
         return $sqlParams;
     }
 
-    public function prepareSQLValues($get = null) : array
+    public function prepareSQLValues($array = null) : array
     {
+        var_dump($array);
         $keyArrays = [];
         $valuesArray = [];
 
-        if ($get) {
-            foreach ($get as $key => $value) {
+        if ($array) {
+            foreach ($array as $key => $value) {
                 $keyArrays[]    =   ':' . $key;
                 $valuesArray[]  =   $value;
             }

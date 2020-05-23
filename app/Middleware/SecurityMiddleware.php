@@ -20,10 +20,10 @@ class SecurityMiddleware extends Security implements Middleware
     {
         {
             // Add get, post, session attributes to request
-            $request = $request->withAttribute('securityPost', $this->getFilteredPost());
-            $request = $request->withAttribute('securityGet', $this->getFilteredGet());
-            $request = $request->withAttribute('securitySession', $this->getFilteredSession());
-            $request = $request->withAttribute('security', $this);
+            $request = $request->withAttribute('securityPost',      $this->getFilteredPost());
+            $request = $request->withAttribute('securityGet',       $this->getFilteredGet());
+            $request = $request->withAttribute('securitySession',   $this->getFilteredSession());
+            $request = $request->withAttribute('security',          $this);
         }
 
         return $handler->handle($request);

@@ -24,10 +24,12 @@ class HomeController
 
         ]);
     }
-    public function users(View $view, UsersModelManager $modelManager)
+    public function login(Request $request, View $view, UsersModelManager $modelManager)
     {
-        return $view('test.twig', [
-            'output' => dump($modelManager())
+        $postLoginData = $request->getParams();
+
+        return $view('login.twig', [
+            'output' => $authentification
         ]);
     }
     public function knowledgebase(View $view, APIContentModelManager $modelManager, Security $security)

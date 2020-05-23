@@ -35,8 +35,18 @@ class View
         // Render Twig
         $twig->render($this->response, $template, $with);
 
-        if ($headName && $headValue) return $this->response->withHeader($headName, $headValue);
-        return $this->response;
+        $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
+            throw new HttpNotFoundException($request);
+        });
 
+        if ($headName && $headValue) {
+            return $this->response->withHeader($headName, $headValue)
+                ->withHeader('Access-Control-Allow-Origin', '*')
+                ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
+                // Optional: Allow Ajax CORS requests with Authorization header
+                ->withHeader('Access-Control-Allow-Credentials', 'true');
+        }
+            return $this->response;
     }
 }
