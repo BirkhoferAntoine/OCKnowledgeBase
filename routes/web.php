@@ -2,6 +2,6 @@
 
 use App\Support\Route;
 
-Route::get('/',         'HomeController@index');
-Route::get('/users',    'HomeController@users');
-Route::get('/kbase',    'HomeController@knowledgebase');
+Route::get(     '/login',                'HomeController@react');
+Route::get(     '/dashboard',            'HomeController@react');
+Route::get(     '/knowledgebase',        'HomeController@react');

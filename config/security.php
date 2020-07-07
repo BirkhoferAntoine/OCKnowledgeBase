@@ -2,39 +2,51 @@
 
 return [
     'session'       => [
-        'token' => FILTER_VALIDATE_INT, // TODO HASH
+        'authorization' => [
+            'filter'        => FILTER_SANITIZE_SPECIAL_CHARS,
+            'flags'         => FILTER_FLAG_STRIP_BACKTICK
+        ],
+    ],
+
+    'server'        => [
+        'ip'            => FILTER_VALIDATE_IP,
+    ],
+
+    'uri'           => [
+        'filter'        => FILTER_SANITIZE_URL,
+        'flags'         => FILTER_FLAG_STRIP_BACKTICK
     ],
 
     'get'           => [
         'category'                  =>      [
-            'filter' => FILTER_VALIDATE_INT,
+            'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'flags'  => FILTER_FLAG_STRIP_BACKTICK
+        ],
+        'category_name'             =>      [
+            'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
             'flags'  => FILTER_FLAG_STRIP_BACKTICK
         ],
         'content'                   =>      [
-            'filter' => FILTER_VALIDATE_INT,
-            'flags'  => FILTER_FLAG_STRIP_BACKTICK
-        ],
-        'categories'        =>      [
             'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
             'flags'  => FILTER_FLAG_STRIP_BACKTICK
         ],
-        'title'             =>      [
+        'categories'                =>      [
             'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
             'flags'  => FILTER_FLAG_STRIP_BACKTICK
         ],
-        'id'                =>      [
+        'title'                     =>      [
+            'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'flags'  => FILTER_FLAG_STRIP_BACKTICK
+        ],
+        'id'                        =>      [
             'filter' => FILTER_VALIDATE_INT,
             'flags'  => FILTER_FLAG_STRIP_BACKTICK
         ],
     ],
 
     'post'          => [
-        'id'                 =>      [
+        'id'                        =>      [
             'filter' => FILTER_VALIDATE_INT,
-            'flags'  => FILTER_FLAG_STRIP_BACKTICK
-        ],
-        'user_name'                 =>      [
-            'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
             'flags'  => FILTER_FLAG_STRIP_BACKTICK
         ],
         'content'                   =>      [
@@ -57,14 +69,13 @@ return [
             'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
             'flags'  => FILTER_FLAG_STRIP_BACKTICK
         ],
-        'login_identifier'          =>      [
+        'user_name'                 =>      [
             'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
             'flags'  => FILTER_FLAG_STRIP_BACKTICK
         ],
-        'login_password'            =>      [
+        'password'                 =>      [
             'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
             'flags'  => FILTER_FLAG_STRIP_BACKTICK
         ],
-
     ]
 ];

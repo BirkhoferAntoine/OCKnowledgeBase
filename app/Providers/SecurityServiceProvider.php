@@ -4,15 +4,12 @@
 namespace App\Providers;
 
 use App\Support\Security;
-use Slim\Psr7\Factory\ResponseFactory;
-use Symfony\Component\Debug\Exception\ClassNotFoundException;
+use Slim\Http\ServerRequest as Request;
 
 class SecurityServiceProvider extends ServiceProvider
 {
     /**
      * @global $security
-     * @param ResponseFactory
-     * @param App
      * @param array $argsGet
      * @param array $argsPost
      */
@@ -23,9 +20,11 @@ class SecurityServiceProvider extends ServiceProvider
             {
                 return new Security();
             });
+            // Definition du dossier cible des téléchargements
+            $this->app->getContainer()->set('upload_directory', resources_path('images'));
         } catch (Exception $e) {
-        if (env('APP_DEBUG', false))
-            throw new ClassNotFoundException('Erreur ' . var_export(self::class) . ' n\'est pas fonctionnel', $e);
+        //if (env('APP_DEBUG', false))
+          //  throw new ClassNotFoundException('Erreur ' . var_export(self::class) . ' n\'est pas fonctionnel', $e);
         }
     }
 

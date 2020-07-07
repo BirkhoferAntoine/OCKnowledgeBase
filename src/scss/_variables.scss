@@ -1,0 +1,78 @@
+// Variable overrides
+
+.app-header {
+  background-color: #2f353a !important;
+}
+
+.nav-pills {
+  align-items: baseline;
+}
+
+.app-header {
+  align-items: baseline;
+  border-bottom: none !important;
+}
+
+.app {
+  max-height: 100vh;
+}
+
+.isLoading {
+  width: 100%;
+  height: 100%;
+  margin-top: 20vh;
+}
+
+.firstCol {
+  padding: 1.5rem !important;
+}
+
+.ck.ck-editor__editable_inline[dir="ltr"] {
+  min-height: 25rem;
+}
+
+#loginFeedback {
+  margin: 1rem;
+  min-height: 2rem;
+  visibility: hidden;
+}
+
+.invalid-feedback {
+  font-size: medium;
+}
+
+@media all and (max-width: 1023px) {
+
+  .app-header {
+    padding: 0.5rem
+  }
+
+  .firstCol {
+    padding: 0 !important;
+  }
+
+  .cardDiv {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .nav {
+    flex-wrap: nowrap !important;
+  }
+
+  .navbar-nav {
+    max-width: 50%;
+  }
+
+  ul .nav-pills {
+    margin: auto;
+  }
+  ul .nav-pills li {
+    margin: auto !important;
+    font-size: 1.5em !important;
+  }
+
+  #loginCard {
+    min-height: 80vh;
+  }
+}

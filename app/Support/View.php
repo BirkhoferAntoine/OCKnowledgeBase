@@ -10,21 +10,31 @@ use Psr\Http\Message\ResponseInterface;
 
 class View
 {
-    public ResponseInterface $response;
-    public $app;
+    private ResponseFactoryInterface $_factory;
+    private $_app;
 
     public function __construct(ResponseFactoryInterface $factory, $app)
     {
-        $this->response = $factory->createResponse(200, 'Success');
-        $this->app = &$app;
+        $this->_factory  = $factory;
+        $this->_app      = &$app;
     }
 
-    public function __invoke(string $template = '', array $with = [], $headName = null, $headValue = null) : ResponseInterface
+    public function __invoke(string $template = '', array $with = [], $header = null, $status = null) : ResponseInterface
     {
-        $app = &$this->app;
+        $app    = &$this->_app;
 
-        $cache = config('twig.cache');
-        $path = resources_path('views');
+        if ($status)    {
+            $response = $this->_factory->createResponse($status['code'], $status['message']);
+        } else {
+            $response = $this->_factory->createResponse(200, 'Success');
+        }
+
+        $cache  = config('twig.cache');
+        $path   = resources_path('views');
+
+/*        $this->app->options('/{routes:.+}', function ($request, $response, $args) {
+            return $response;
+        });*/
 
         // Create Twig
         $twig = Twig::create($path, $cache);
@@ -33,20 +43,16 @@ class View
         $app->add(TwigMiddleware::create($app, $twig));
 
         // Render Twig
-        $twig->render($this->response, $template, $with);
-
-        $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
-            throw new HttpNotFoundException($request);
-        });
-
-        if ($headName && $headValue) {
-            return $this->response->withHeader($headName, $headValue)
-                ->withHeader('Access-Control-Allow-Origin', '*')
+        $twig->render($response, $template, $with);
+        
+        if ($header) {
+            return $response->withHeader($header['name'], $header['value'])
+                ->withHeader('Access-Control-Allow-Origin', 'https://knowledgebase.rongeasse.com')
                 ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
                 ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
                 // Optional: Allow Ajax CORS requests with Authorization header
                 ->withHeader('Access-Control-Allow-Credentials', 'true');
         }
-            return $this->response;
+            return $response;
     }
 }

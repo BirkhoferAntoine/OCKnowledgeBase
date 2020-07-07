@@ -4,9 +4,8 @@ return [
     /* Environment variables */
         'name'      => env('APP_NAME', 'KnowledgeBase'),
         'env'       => env('APP_ENV', 'remote'),
-        'app_debug' => env('APP_DEBUG', true),
+        'app_debug' => env('APP_DEBUG', false),
         'url'       => env('APP_URL', 'https://ockb.rongeasse.com'),
-        'jwt'       => env('JWT_SECRET', ''),
 
     /* App Service Providers */
         'providers' => [
@@ -17,7 +16,7 @@ return [
             \App\Providers\RouteServiceProvider::class,
             \App\Providers\TwigServiceProvider::class,
             \App\Providers\UsersDatabaseServiceProvider::class,
-            \App\Providers\ContentDatabaseServiceProvider::class,
             \App\Providers\APIContentDatabaseServiceProvider::class,
+            \App\Providers\ImagesManagerServiceProvider::class,
             ]
 ];

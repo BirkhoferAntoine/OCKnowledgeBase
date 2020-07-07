@@ -3,7 +3,11 @@
 
 namespace App\Controllers;
 
+
 use App\Models\APIContentModelManager;
+use App\Models\ImagesManager;
+use App\Models\TokensModelManager;
+use App\Models\UsersModelManager;
 use App\Support\Security;
 use App\Support\View;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -11,51 +15,65 @@ use Slim\Http\ServerRequest as Request;
 
 class APIController
 {
-    public function get(View $view, APIContentModelManager $modelManager)
-    {
-        $data       = $modelManager->get();
-        $payload    = json_encode($data, JSON_PRETTY_PRINT);
 
-        return $view('apiGet.twig', [
-            'output' => $payload
+    private function _defaultResponse($data, View $view)
+    {
+        $payload        = json_encode($data['content'], JSON_PRETTY_PRINT);
+        $defaultHeaders = ['name' => 'Content-Type', 'value' => 'application/json'];
+
+        return $view('templates/api.twig',
+            [
+                'output' => $payload
             ],
-        'Content-Type', 'application/json'
+            $defaultHeaders, $data['status']
         );
     }
 
-    public function post(Request $request, View $view, APIContentModelManager $modelManager)
+    public function login(Request $request, View $view, UsersModelManager $usersManager)
     {
-        $add        = $modelManager->add($request->getParams());
-        $payload    = json_encode('Success!', JSON_PRETTY_PRINT);
-
-        return $view('apiPost.twig', [
-            'output' => $payload
-        ],
-            'Content-Type', 'application/json'
-        );
+        $usersManager->setRequest($request);
+        $auth = $usersManager->authentification();
+        return $this->_defaultResponse($auth, $view);
     }
 
-    public function put(Request $request, View $view, APIContentModelManager $modelManager)
+    public function get(View $view, APIContentModelManager $contentManager)
     {
-        $put        = $modelManager ->update($request->getParams());
-        $payload    = json_encode('Success!', JSON_PRETTY_PRINT);
+        $data = $contentManager->get();
 
-        return $view('apiPut.twig', [
-            'output' => $payload
-        ],
-            'Content-Type', 'application/json'
-        );
+        return $this->_defaultResponse($data, $view);
     }
 
-    public function delete(View $view, APIContentModelManager $modelManager)
+    public function post(Request $request, View $view,
+                         APIContentModelManager $contentManager)
     {
-        $delete         = $modelManager ->delete();
-        $payload        = json_encode('Success!', JSON_PRETTY_PRINT);
+        $contentManager->setRequest($request);
+        $data = $contentManager->add();
 
-        return $view('apiDelete.twig', [
-            'output' => $payload
-        ],
-            'Content-Type', 'application/json'
-        );
+        return $this->_defaultResponse($data, $view);
+    }
+
+    public function put(Request $request, View $view,
+                        APIContentModelManager $contentManager)
+    {
+        $contentManager->setRequest($request);
+        $data = $contentManager->update();
+
+        return $this->_defaultResponse($data, $view);
+    }
+
+    public function delete(Request $request, View $view,
+                           APIContentModelManager $contentManager)
+    {
+        $contentManager->setRequest($request);
+        $data = $contentManager->delete();
+
+        return $this->_defaultResponse($data, $view);
+    }
+
+    public function uploadImage(Request $request, View $view,
+                                ImagesManager $imgManager)
+    {
+        $data = $imgManager->uploadImage($request);
+        return $this->_defaultResponse($data, $view);
     }
 }

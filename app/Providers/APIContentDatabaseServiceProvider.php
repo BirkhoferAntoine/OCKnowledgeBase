@@ -5,7 +5,6 @@ namespace App\Providers;
 
 use App\Support\Security;
 use App\Models\APIContentModelManager;
-use Symfony\Component\Debug\Exception\ClassNotFoundException;
 
 class APIContentDatabaseServiceProvider extends ServiceProvider
 {
@@ -17,8 +16,8 @@ class APIContentDatabaseServiceProvider extends ServiceProvider
                 return new APIContentModelManager(new Security());
             });
         } catch (Exception $e) {
-            if (env('APP_DEBUG', false))
-                throw new ClassNotFoundException('Erreur ' . var_export(self::class) . ' n\'est pas fonctionnel', $e);
+            //if (env('APP_DEBUG', false))
+               //throw new ClassNotFoundException('Erreur ' . var_export(self::class) . ' n\'est pas fonctionnel', $e);
         }
 
     }

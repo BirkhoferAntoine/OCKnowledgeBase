@@ -17,7 +17,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         require routes_path('web.php');
         require routes_path('api.php');
-        require routes_path('admin.php');
     }
 
 }

@@ -37,7 +37,6 @@ use Illuminate\View\Factory;
  * data_set
  */
 
-
 if (!function_exists('env'))
 {
     function env($key, $default = null)
@@ -291,5 +290,18 @@ if (! function_exists('data_set')) {
         }
 
         return $target;
+    }
+}
+
+if (!function_exists('api_response'))
+{
+    function api_response($code, $message, $content)
+    {
+        return [
+            'status' =>
+                ['code' => $code, 'message' => $message],
+            'content' =>
+                $content
+        ];
     }
 }
