@@ -6,7 +6,7 @@ vendor
 
 
 # Database connection files
-/config/database.php
+/appConfig/database.php
 
 # Tests and trashes
 

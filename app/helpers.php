@@ -70,7 +70,7 @@ if (!function_exists('config_path'))
 {
     function config_path($path = '')
     {
-        return base_path("config/{$path}");
+        return base_path("appConfig/{$path}");
     }
 }
 
