@@ -70,6 +70,25 @@ class APIController
         return $this->_defaultResponse($data, $view);
     }
 
+    public function getImage(View $view, ImagesManager $imgManager)
+    {
+        $data = $imgManager->getImage();
+        return $this->_defaultResponse($data, $view);
+    }
+
+    public function showImages(View $view, ImagesManager $imgManager)
+    {
+        $data = $imgManager->getImagesArray();
+        return $this->_defaultResponse($data, $view);
+    }
+
+    public function deleteImage(Request $request, View $view,
+                                ImagesManager $imgManager)
+    {
+        $data = $imgManager->deleteImage($request);
+        return $this->_defaultResponse($data, $view);
+    }
+
     public function uploadImage(Request $request, View $view,
                                 ImagesManager $imgManager)
     {

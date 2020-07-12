@@ -10,7 +10,7 @@ class PagesList extends Component {
 
     constructor(props) {
         super(props);
-        this.returnHTML         = this.returnHTML.bind(this);
+        this.returnHTML = this.returnHTML.bind(this);
         this.state = {
             pageData:       props.pageData,
             pagesList:      [],

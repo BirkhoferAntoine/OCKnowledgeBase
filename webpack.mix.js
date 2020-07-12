@@ -1,6 +1,6 @@
 const mix = require('laravel-mix');
-const path = require('path');
-require('laravel-mix-twig-to-html');
+const path = require('path')
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -37,9 +37,3 @@ mix.webpackConfig({
 
 // used to run app using reactjs
 mix.react('src/index.js', 'public/js/app.js').version();
-
-
-mix.twigToHtml({
-    files: 'resources/views/templates/web.twig',
-    fileBase: 'resources/views/templates/',
-});

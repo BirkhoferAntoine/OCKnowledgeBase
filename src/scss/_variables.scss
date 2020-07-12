@@ -41,6 +41,18 @@
   font-size: medium;
 }
 
+.carouselCard {
+  min-height: 70vh !important;
+}
+
+.knowledgePage {
+  min-height: 70vh !important;
+}
+
+.carousel-caption {
+  display: block !important;
+}
+
 @media all and (max-width: 1023px) {
 
   .app-header {
@@ -75,4 +87,9 @@
   #loginCard {
     min-height: 80vh;
   }
+
+  .carousel-caption h3 {
+    font-size: 1.10rem !important;
+  }
+
 }

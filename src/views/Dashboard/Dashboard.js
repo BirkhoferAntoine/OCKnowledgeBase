@@ -27,11 +27,11 @@ import { withCookies, Cookies } from 'react-cookie';
 
 const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
 
-const brandPrimary = getStyle('--primary')
-const brandSuccess = getStyle('--success')
-const brandInfo = getStyle('--info')
-const brandWarning = getStyle('--warning')
-const brandDanger = getStyle('--danger')
+const brandPrimary = getStyle('--primary');
+const brandSuccess = getStyle('--success');
+const brandInfo = getStyle('--info');
+const brandWarning = getStyle('--warning');
+const brandDanger = getStyle('--danger');
 
 // Card Chart 1
 const cardChartData1 = {
@@ -464,7 +464,6 @@ class Dashboard extends Component {
     this.toggle           = this.toggle.bind(this);
     this.onRadioBtnClick  = this.onRadioBtnClick.bind(this);
     this.isLogged         = this.isLogged.bind(this);
-
     this.state = {
       dropdownOpen: false,
       radioSelected: 2,
@@ -484,16 +483,20 @@ class Dashboard extends Component {
     });
   }
 
-  loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
+  loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>;
 
   isLogged() {
-    const { cookies } = this.props;
+    if (this.state.token === null) {
+      window.location.replace("/#/login");
+      return window.location.reload(true);
+    }
   }
 
   render() {
 
-  this.isLogged()
+  this.isLogged();
 
+  if (this.state.token !== null)
     return (
       <div className="animated fadeIn">
         <Row>
@@ -503,7 +506,7 @@ class Dashboard extends Component {
                 <ButtonGroup className="float-right">
                   <ButtonDropdown id='card1' isOpen={this.state.card1} toggle={() => { this.setState({ card1: !this.state.card1 }); }}>
                     <DropdownToggle caret className="p-0" color="transparent">
-                      <i className="icon-settings"></i>
+                      <i className="icon-settings"/>
                     </DropdownToggle>
                     <DropdownMenu right>
                       <DropdownItem>Action</DropdownItem>
@@ -528,7 +531,7 @@ class Dashboard extends Component {
                 <ButtonGroup className="float-right">
                   <Dropdown id='card2' isOpen={this.state.card2} toggle={() => { this.setState({ card2: !this.state.card2 }); }}>
                     <DropdownToggle className="p-0" color="transparent">
-                      <i className="icon-location-pin"></i>
+                      <i className="icon-location-pin"/>
                     </DropdownToggle>
                     <DropdownMenu right>
                       <DropdownItem>Action</DropdownItem>
@@ -552,7 +555,7 @@ class Dashboard extends Component {
                 <ButtonGroup className="float-right">
                   <Dropdown id='card3' isOpen={this.state.card3} toggle={() => { this.setState({ card3: !this.state.card3 }); }}>
                     <DropdownToggle caret className="p-0" color="transparent">
-                      <i className="icon-settings"></i>
+                      <i className="icon-settings"/>
                     </DropdownToggle>
                     <DropdownMenu right>
                       <DropdownItem>Action</DropdownItem>
@@ -576,7 +579,7 @@ class Dashboard extends Component {
                 <ButtonGroup className="float-right">
                   <ButtonDropdown id='card4' isOpen={this.state.card4} toggle={() => { this.setState({ card4: !this.state.card4 }); }}>
                     <DropdownToggle caret className="p-0" color="transparent">
-                      <i className="icon-settings"></i>
+                      <i className="icon-settings"/>
                     </DropdownToggle>
                     <DropdownMenu right>
                       <DropdownItem>Action</DropdownItem>
@@ -604,7 +607,7 @@ class Dashboard extends Component {
                     <div className="small text-muted">November 2015</div>
                   </Col>
                   <Col sm="7" className="d-none d-sm-inline-block">
-                    <Button color="primary" className="float-right"><i className="icon-cloud-download"></i></Button>
+                    <Button color="primary" className="float-right"><i className="icon-cloud-download"/></Button>
                     <ButtonToolbar className="float-right" aria-label="Toolbar with button groups">
                       <ButtonGroup className="mr-3" aria-label="First group">
                         <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(1)} active={this.state.radioSelected === 1}>Day</Button>

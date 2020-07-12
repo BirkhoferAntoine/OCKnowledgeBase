@@ -21,7 +21,7 @@ class MiddlewareServiceProvider extends ServiceProvider
             $app->add(function ($request, $handler) {
                 $response = $handler->handle($request);
                 return $response
-                    ->withHeader('Access-Control-Allow-Origin', 'https://knowledgebase.rongeasse.com')
+                    ->withHeader('Access-Control-Allow-Origin', 'https://ockb.rongeasse.com')
                     ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
                     ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
                     // Optional: Allow Ajax CORS requests with Authorization header

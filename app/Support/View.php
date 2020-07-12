@@ -21,7 +21,7 @@ class View
 
     public function __invoke(string $template = '', array $with = [], $header = null, $status = null) : ResponseInterface
     {
-        $app    = &$this->_app;
+        $app = &$this->_app;
 
         if ($status)    {
             $response = $this->_factory->createResponse($status['code'], $status['message']);
@@ -29,8 +29,9 @@ class View
             $response = $this->_factory->createResponse(200, 'Success');
         }
 
-        $cache  = config('twig.cache');
-        $path   = resources_path('views');
+        $cache          = config('twig.cache');
+        $path           = resources_path('views');
+
 
 /*        $this->app->options('/{routes:.+}', function ($request, $response, $args) {
             return $response;
@@ -47,7 +48,7 @@ class View
         
         if ($header) {
             return $response->withHeader($header['name'], $header['value'])
-                ->withHeader('Access-Control-Allow-Origin', 'https://knowledgebase.rongeasse.com')
+                ->withHeader('Access-Control-Allow-Origin', 'https://ockb.rongeasse.com')
                 ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
                 ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
                 // Optional: Allow Ajax CORS requests with Authorization header

@@ -1,30 +1,16 @@
 import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import { Carousel, CarouselCaption, CarouselControl, CarouselIndicators, CarouselItem,
-    Badge,
+import {
+    Carousel, CarouselCaption, CarouselControl, CarouselIndicators, CarouselItem,
     Button,
     Card,
     CardBody,
-    CardFooter,
     CardHeader,
     Col,
-    Collapse,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Fade,
     Form,
-    FormGroup,
-    FormText,
-    FormFeedback,
     Input,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupButtonDropdown,
-    InputGroupText,
-    Label,
-    Row,
+    Row, Container, CardGroup,
 } from 'reactstrap';
 
 class Gallery extends Component {
@@ -33,7 +19,6 @@ class Gallery extends Component {
     };
     constructor(props) {
         super(props);
-        //this.importAll      = this.importAll.bind(this);
         this.handleSubmit   = this.handleSubmit.bind(this);
         this.next           = this.next.bind(this);
         this.previous       = this.previous.bind(this);
@@ -41,80 +26,92 @@ class Gallery extends Component {
         this.onExiting      = this.onExiting.bind(this);
         this.onExited       = this.onExited.bind(this);
         const { cookies } = props;
-        const imagesFolder = '/../../../../resources/images';
-/*        const importAll = (r) => {
-            let images = {};
-            r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
-            return images;
-        }*/
         this.state = {
             pictures: [],
             activeIndex: 0,
             items: [],
             token: cookies.get('token') || null,
+            isLoaded: false,
         };
     }
 
-    componentDidMount() {
-        //const {fsScandir} = this.props;
-        const imagesFolder = '/../../../../resources/images';
-        /*const entries = fsScandir.scandirSync(imagesFolder);
-        const items = entries.map((image) => {
-            console.log(image);
-            return image;
-        });*/
-        /*const items = this.importAll(
-            require.context(
-                imagesFolder,
-                true,
-                /\.(png|jpe?g|svg|bmp)$/
-            )
-        );*/
+    async componentDidMount() {
 
-        /*this.setState({
-            items
-        })*/
-    }
+        const imagesFetch  = 'https://ockb.rongeasse.com/api/v1/images';
 
-    importAll(r) {
-        let images = {};
-        r.keys().map((item, index) => {
-            images[item.replace('./', '')] = r(item);
-        });
-        return images;
-    }
-
-    async handleSubmit(event) {
-        event.preventDefault();
-        const pictures  = this.state.pictures[0];
-        const data      = new FormData();
-        console.log('pictures', pictures)
-        data.append('images', pictures)
-        await console.log(data);
-
-        const token     = this.state.token
-        const urlPost   = 'https://ockb.rongeasse.com/api/v1/upload';
-        const headers   = new Headers();
-        headers.append('Authorization', token);
-
-        const init = {
-            method: 'POST',
-            headers,
-            mode: 'cors',
-            body: data
-        };
-
-        fetch(urlPost, init)
-            .then((response) => {
-                alert('sent')
-                return response.json(); // or .text() or .blob() ...
+        await fetch(imagesFetch)
+            .then((resImgs) => {
+                return resImgs.json();
             })
-            .then((text) => {
-                alert(text)
+            .then(async (imgsJson) => {
+
+                const items = [];
+
+                await imgsJson.forEach((imgStr) => {
+                    items.push({
+                        src:        imgStr.src,
+                        altText:    imgStr.title,
+                        caption:    imgStr.title
+                    });
+                })
+
+                await this.setState({
+                    items: items,
+                    isLoaded: true,
+                });
             })
             .catch((e) => {
-                alert(`Erreur lors de la transmission  , ${e}`)
+                this.setState({
+                    hasError: e
+                })
             });
+
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        let dataObject = {};
+
+        data.forEach((value, key) => {
+            dataObject[key] = value
+        });
+
+        if (window.confirm("Voulez-vous supprimer cette image? " + dataObject.image)) {
+
+            const token = this.state.token;
+            const urlPost = `https://ockb.rongeasse.com/api/v1/deleteimage?image=${dataObject.image}`;
+            const headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            headers.append('Authorization', token)
+
+            const init = {
+                method: 'DELETE',
+                headers,
+                mode: 'cors',
+                body: JSON.stringify(dataObject)
+            };
+
+            fetch(urlPost, init)
+                .then((response) => {
+                    if (response.status === 200) {
+                        window.location.replace("/#/dashboard/images/gallery");
+                        return window.location.reload(true);
+                    }
+                    if (response.status === 401) {
+                        const { cookies } = this.props;
+                        cookies.remove('token');
+                        alert(response.json());
+                        window.location.replace("/#/login");
+                        return window.location.reload(true);
+                    }
+                })
+                .then((text) => {
+                })
+                .catch((e) => {
+                    alert(`Erreur lors de la transmission  , ${e}`)
+                });
+        }
     }
 
     onExiting() {
@@ -143,101 +140,87 @@ class Gallery extends Component {
     }
 
     render() {
-        const { activeIndex, items } = this.state;
 
-        const slides = items.map((image) => {
+
+        const {activeIndex, items} = this.state;
+
+        const deleteImgForm = (imgName) => {
             return (
-                <CarouselItem onExiting={this.onExiting} onExited={this.onExited} key={image.src}>
-                    <img className="d-block w-100" src={image.src} alt={image.altText} />
-                </CarouselItem>
-            );
-        });
+                <Form className="deleteImgForm" onSubmit={this.handleSubmit}>
+                    <div className="form-actions 'd-flex justify-content-center'">
+                        <Input type="hidden" id="deleteImgName"
+                               value={imgName} name="image"/>
+                        <Button type="submit" size="sm" color="danger">
+                            <i className="fa fa-ban"/> Supprimer
+                        </Button>
+                    </div>
+                </Form>
+            )
+        };
 
-        const slides2 = items.map((item) => {
+        const slides = items.map((item) => {
             return (
                 <CarouselItem
                     onExiting={this.onExiting}
                     onExited={this.onExited}
-                    key={item.src}
+                    key={item.altText}
                 >
-                    <img className="d-block w-100" src={item.src} alt={item.altText} />
-                    <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
+                    <img className="d-block w-100 carouselImg" src={item.src} alt={item.altText}/>
+                    <CarouselCaption className="d-block" captionHeader={item.caption} captionText={deleteImgForm(item.caption)}/>
                 </CarouselItem>
             );
         });
+        if (this.state.hasError) {
+            return (
+                <div>Erreur du chargement du contenu</div>
+            )
+        }
 
-        return (
-            <div className="animated fadeIn">
-                <Row>
-                    <Col xs="12" xl="6">
-                        <Card>
-                            <CardHeader>
-                                <i className="fa fa-align-justify"></i><strong>Carousel</strong>
-                                <div className="card-header-actions">
-                                    <a href="https://reactstrap.github.io/components/carousel/" rel="noreferrer noopener" target="_blank" className="card-header-action">
-                                        <small className="text-muted">docs</small>
-                                    </a>
-                                </div>
-                            </CardHeader>
-                            <CardBody>
-                                <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous} ride="carousel">
-                                    {slides}
-                                </Carousel>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    <Col xs="12" xl="6">
-                        <Card>
-                            <CardHeader>
-                                <i className="fa fa-align-justify"></i><strong>Carousel</strong>
-                            </CardHeader>
-                            <CardBody>
-                                <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
-                                    <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
-                                    {slides2}
-                                    <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-                                    <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
-                                </Carousel>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            </div>
-        );
+        if (!this.state.isLoaded) {
+
+            return (
+                <div className="isLoading d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div>
+            )
+
+        } else {
+
+            return (
+                <div className="app flex-row align-items-center flex-column">
+                    <Container className="my-0 mx-auto p-0">
+                        <div className="animated fadeIn">
+                            <Row className="justify-content-center">
+                                <Col md="12">
+                                    <CardGroup className="animated fadeIn">
+                                    <Card className="carouselCard">
+                                        <CardHeader>
+                                            <i className="fa fa-align-justify"/><strong>Carousel</strong>
+                                        </CardHeader>
+                                        <CardBody>
+                                            <Carousel activeIndex={activeIndex} next={this.next}
+                                                      previous={this.previous}>
+                                                <CarouselIndicators items={items} activeIndex={activeIndex}
+                                                                    onClickHandler={this.goToIndex}/>
+                                                {slides}
+                                                <CarouselControl direction="prev" directionText="Previous"
+                                                                 onClickHandler={this.previous}/>
+                                                <CarouselControl direction="next" directionText="Next"
+                                                                 onClickHandler={this.next}/>
+                                            </Carousel>
+                                        </CardBody>
+                                    </Card>
+                                    </CardGroup>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Container>
+                </div>
+            );
+        }
     }
 }
-/*
-render() {
-        return (
-            <div className="animated fadeIn">
-                <Row>
-                    <Col xs="12" sm="18">
-                        <Card>
-                            <CardHeader>
-                                <strong>Héberger une nouvelle image</strong>
-                            </CardHeader>
-                            <CardBody>
-                                <Form id="hostImageForm" onSubmit={this.handleSubmit} noValidate>
-                                    <FormGroup className={"d-flex flex-column justify-content-evenly"}>
-                                        <ImageUploader
-                                            withIcon={true}
-                                            buttonText='Choose images'
-                                            onChange={this.onDrop}
-                                            imgExtension={['.jpg', 'jpeg', '.gif', '.png', '.bmp']}
-                                            maxFileSize={5242880}
-                                        />
-                                        <div className="form-actions d-flex justify-content-center m-2">
-                                            <Button type="submit" color="primary">Envoyer</Button>
-                                        </div>
-                                    </FormGroup>
-                                </Form>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            </div>
-        );
-    }
-}*/
 
 export default withCookies(Gallery);

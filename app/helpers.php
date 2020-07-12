@@ -6,8 +6,6 @@ declare(strict_types=1);
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
-use Illuminate\View\View;
-use Illuminate\View\Factory;
 
 /*
  * NOT INCLUDED
@@ -21,6 +19,7 @@ use Illuminate\View\Factory;
  * factory
  *
  * INCLUDED
+ * starts_with
  * env
  * base_path
  * config_path
@@ -35,7 +34,70 @@ use Illuminate\View\Factory;
  * config
  * data_get
  * data_set
+ *
+ * Dev implemented / made
+ *
+ * mix
+ * build_path
+ * filters
+ * api_response
  */
+
+// Fonction mix() de Laravel pour charger les chunks.js du front React
+if (!function_exists('mix')) {
+    /**
+     * Get the path to a versioned Mix file.
+     *
+     * @param string $path
+     * @param string $manifestDirectory
+     * @return string
+     *
+     * @throws \Exception
+     */
+    function mix($path, $manifestDirectory = '')
+    {
+        static $manifest;
+        $publicFolder = '/public';
+        $rootPath = base_path();
+        $publicPath = base_path();
+        if ($manifestDirectory && !starts_with($manifestDirectory, '/')) {
+            $manifestDirectory = "/{$manifestDirectory}";
+        }
+        if (!$manifest) {
+            if (!file_exists($manifestPath = ($rootPath . $manifestDirectory . '/mix-manifest.json'))) {
+                throw new Exception('The Mix manifest does not exist.');
+            }
+            $manifest = json_decode(file_get_contents($manifestPath), true);
+        }
+        if (!starts_with($path, '/')) {
+            $path = "/{$path}";
+        }
+        $path = $publicFolder . $path;
+        if (!array_key_exists($path, $manifest)) {
+            throw new Exception(
+                "Unable to locate Mix file: {$path}. Please check your " .
+                'webpack.mix.js output paths and try again.'
+            );
+        }
+        return file_exists($publicPath . ($manifestDirectory . '/hot'))
+            ? "http://localhost:8080{$manifest[$path]}"
+            : $manifestDirectory . $manifest[$path];
+    }
+}
+
+if (! function_exists('starts_with')) {
+    /**
+     * Determine if a given string starts with a given substring.
+     *
+     * @param  string  $haystack
+     * @param  string|array  $needles
+     * @return bool
+     */
+    function starts_with($haystack, $needles)
+    {
+        return Str::startsWith($haystack, $needles);
+    }
+}
 
 if (!function_exists('env'))
 {
@@ -70,7 +132,7 @@ if (!function_exists('config_path'))
 {
     function config_path($path = '')
     {
-        return base_path("appConfig/{$path}");
+        return base_path("config/{$path}");
     }
 }
 
@@ -86,7 +148,15 @@ if (!function_exists('public_path'))
 {
     function public_path($path = '')
     {
-        return base_path("public_path/{$path}");
+        return base_path("public/{$path}");
+    }
+}
+
+if (!function_exists('build_path'))
+{
+    function build_path($path = '')
+    {
+        return base_path("build/{$path}");
     }
 }
 

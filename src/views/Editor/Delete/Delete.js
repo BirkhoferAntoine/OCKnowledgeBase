@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import { Button, Input, Container, Card, CardBody, CardFooter, CardHeader, CardGroup, Col, Form, FormGroup,
     Row, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
-import { withRouter } from "react-router";
-import {isEmptyValue} from "enzyme/src/Utils";
 import DOMPurify from 'dompurify';
 import he from 'he';
 import { instanceOf } from 'prop-types';
@@ -55,11 +53,7 @@ class Delete extends Component {
                     page: contentJson[0],
                     pagesArray: this.strDivider(sanitize),
                     isLoaded: true,
-                })
-
-                if (isEmptyValue(this.state.page)) {
-                    console.log('Erreur du chargement du contenu')
-                }
+                });
             })
             .catch((e) => {
                 this.setState({
@@ -70,36 +64,48 @@ class Delete extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        const data = new FormData(event.target);
-        let dataObject = {};
+        if (window.confirm("Confirmer la suppression?")) {
 
-        data.forEach((value, key) => {
-            dataObject[key] = value
-        });
+            const data = new FormData(event.target);
+            let dataObject = {};
 
-        const token = this.state.token;
-        const urlPost = `https://ockb.rongeasse.com/api/v1/delete?content=${dataObject.id}`;
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        headers.append('Authorization', token)
-
-        const init = {
-            method: 'DELETE',
-            headers,
-            mode: 'cors',
-            body: JSON.stringify(dataObject)
-        };
-
-        fetch(urlPost, init)
-            .then((response) => {
-                return response.json(); // or .text() or .blob() ...
-            })
-            .then((text) => {
-                alert(text)
-            })
-            .catch((e) => {
-                alert(`Erreur lors de la transmission  , ${e}`)
+            data.forEach((value, key) => {
+                dataObject[key] = value
             });
+
+            const token = this.state.token;
+            const urlPost = `https://ockb.rongeasse.com/api/v1/delete?content=${dataObject.id}`;
+            const headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            headers.append('Authorization', token)
+
+            const init = {
+                method: 'DELETE',
+                headers,
+                mode: 'cors',
+                body: JSON.stringify(dataObject)
+            };
+
+            fetch(urlPost, init)
+                .then((response) => {
+                    if (response.status === 200) {
+                        window.location.replace("/#/dashboard/editor/edit");
+                        return window.location.reload(true);
+                    }
+                    if (response.status === 401) {
+                        const { cookies } = this.props;
+                        cookies.remove('token');
+                        alert(response.json());
+                        window.location.replace("/#/login");
+                        return window.location.reload(true);
+                    }
+                })
+                .then((text) => {
+                })
+                .catch((e) => {
+                    alert(`Erreur lors de la transmission  , ${e}`)
+                });
+        }
     }
 
     loading() {
@@ -125,16 +131,13 @@ class Delete extends Component {
         switch (button) {
             case ('firstPage') :
                 return 0;
-                break;
             case ('previousPage') :
                 return (this.state.currentPage) -1;
-                break;
             case ('nextPage') :
                 return (this.state.currentPage) +1;
-                break;
             case ('lastPage') :
                 return this.state.lastPage -1;
-                break;
+            default: return 0;
         }
     }
 
@@ -181,7 +184,7 @@ class Delete extends Component {
 
         if (this.state.hasError) {
             return (
-                <div>Erreur!</div>
+                <div>Erreur du chargement du contenu</div>
             )
         }
 

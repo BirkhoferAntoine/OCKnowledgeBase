@@ -11,6 +11,7 @@
     "url": "https://github.com/BirkhoferAntoine/OCKnowledgeBase"
   },
   "dependencies": {
+    "@babel/core": "7.9.0",
     "@babel/preset-react": "^7.10.4",
     "@ckeditor/ckeditor5-build-classic": "^19.0.0",
     "@ckeditor/ckeditor5-react": "^2.1.0",
@@ -21,6 +22,8 @@
     "@popperjs/core": "^2.4.0",
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
+    "babel-loader": "8.1.0",
+    "babel-preset-react-app": "^9.1.2",
     "bootstrap": "^4.5.0",
     "chart.js": "^2.8.0",
     "chokidar": "^3.4.0",
@@ -28,6 +31,7 @@
     "cli": "^1.0.1",
     "core-js": "^3.6.5",
     "create-react-app": "^3.4.1",
+    "css-loader": "3.4.2",
     "ddos": "^0.2.1",
     "dompurify": "^2.0.12",
     "enzyme": "^3.10.0",
@@ -62,10 +66,12 @@
     "yargs-parser": "^18.1.3"
   },
   "devDependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.10.4",
+    "browser-sync": "^2.26.7",
+    "browser-sync-webpack-plugin": "^2.0.1",
     "cross-env": "^7.0.2",
     "laravel-mix": "^5.0.4",
-    "laravel-mix-twig-to-html": "^1.3.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "node-sass": "^4.14.1",
     "react-strap": "^0.0.1",
     "resolve-url-loader": "^2.3.2",
@@ -121,5 +127,10 @@
   "engines": {
     "node": ">=8.10",
     "npm": ">=6"
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
   }
 }

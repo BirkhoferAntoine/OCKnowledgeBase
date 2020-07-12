@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, Route, Switch } from 'react-router-dom';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-// import { renderRoutes } from 'react-router-config';
+//import { renderRoutes } from 'react-router-config';
 import './App.scss';
 
 const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
@@ -12,7 +12,7 @@ const AdminLayout = React.lazy(() => import('./containers/DefaultLayout'));
 const KnowledgeBaseLayout = React.lazy(() => import('./views/Pages/KnowledgeBase/DefaultLayout'));
 
 // Pages
-const KnowledgeBase = React.lazy(() => import('./views/Pages/KnowledgeBase'));
+// const KnowledgeBase = React.lazy(() => import('./views/Pages/KnowledgeBase'));
 const Login = React.lazy(() => import('./views/Pages/Login'));
 const Page404 = React.lazy(() => import('./views/Pages/Page404'));
 const Page500 = React.lazy(() => import('./views/Pages/Page500'));
@@ -49,7 +49,8 @@ class App extends Component {
     render() {
             return (
 
-                <BrowserRouter>
+
+                <HashRouter>
                     <React.Suspense fallback={loading()}>
                         <Switch>
                             {this.dashboardAccess()}
@@ -59,7 +60,7 @@ class App extends Component {
                             <Route path="/" name="Page 404" render={props => <Page404 key={'Page404'} {...props}/>}/>
                         </Switch>
                     </React.Suspense>
-                </BrowserRouter>
+                </HashRouter>
             );
         }
 }

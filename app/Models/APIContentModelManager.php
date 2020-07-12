@@ -40,9 +40,6 @@ class APIContentModelManager extends DatabaseModel
                 case (isset($get['categories'])     && $get['categories'] === 'true') :
                     $sql = 'SELECT * FROM `categories` ORDER BY `id`';
                     break;
-                case (isset($get['images'])         && $get['images'] === 'true') :
-                    $sql = 'SELECT * FROM `images` ORDER BY `id`';
-                    break;
                 case (isset($get['content'])        && $get['content'] === 'true') :
                     $sql = 'SELECT * FROM `content` ORDER BY `id`';
                     break;
@@ -58,9 +55,6 @@ class APIContentModelManager extends DatabaseModel
 
                 switch ($get)
                 {
-                    case (isset($get['images'])) :
-                        $sql        = 'SELECT * FROM `images` WHERE ' . $sqlParams . ' ORDER BY `id`';
-                        break;
                     case (isset($get['category_name'])) :
                         $sql        = 'SELECT * FROM `categories` WHERE ' . $sqlParams . ' ORDER BY `id`';
                         break;
@@ -71,10 +65,7 @@ class APIContentModelManager extends DatabaseModel
             }
         }
         if (isset($req)) {
-            if (!isset($get['images']))
-            {
-                $req->setFetchMode(PDO::FETCH_OBJ);
-            }
+
             $content = $req->fetchAll();
             $req->closeCursor();
 
@@ -118,14 +109,6 @@ class APIContentModelManager extends DatabaseModel
                         (NULL, :user_name , :title , :content , NOW() , :image , :category , :sub_category)";
             $content = $this->run($sql, $post)->rowCount();
         }
-        /*if ($post['imageFile']) //TODO Delete if not needed
-        {
-            $sql = "INSERT INTO `images` 
-                        (`id`, `image`) 
-                    VALUES 
-                        (NULL, :image)";
-            $content = $this->run($sql, $post)->rowCount();
-        }*/
         if ($content) {
             return api_response(
                 201,
@@ -207,11 +190,6 @@ class APIContentModelManager extends DatabaseModel
         if (!empty($delete['content']))
         {
             $sql        = "DELETE FROM `content` WHERE `content`.`id` = :id";
-            $content    = $this->run($sql, [':id' => $delete['content']])->rowCount();
-        }
-        if (!empty($delete['image']))
-        {
-            $sql        = "DELETE FROM `images` WHERE `images`.`id` = :id";
             $content    = $this->run($sql, [':id' => $delete['content']])->rowCount();
         }
         if ($content) {

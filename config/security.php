@@ -34,6 +34,10 @@ return [
             'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
             'flags'  => FILTER_FLAG_STRIP_BACKTICK
         ],
+        'image'                     =>      [
+            'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'flags'  => FILTER_FLAG_STRIP_BACKTICK
+        ],
         'title'                     =>      [
             'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
             'flags'  => FILTER_FLAG_STRIP_BACKTICK

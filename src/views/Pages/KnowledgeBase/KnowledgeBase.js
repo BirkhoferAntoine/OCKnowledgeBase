@@ -12,6 +12,7 @@ import { HomeTabs } from './index';
 class KnowledgeBase extends Component {
     constructor(props) {
         super(props);
+        this.homeTabsBuilder        = this.homeTabsBuilder.bind(this);
         this.categoryCardsBuilder   = this.categoryCardsBuilder.bind(this);
         this.contentSorter          = this.contentSorter.bind(this);
         this.loading                = this.loading.bind(this);
@@ -21,8 +22,8 @@ class KnowledgeBase extends Component {
             categories:         [],
             knowledgeCards:     [],
             isLoaded:           false,
-        }
-    }
+        };
+    };
 
     async componentDidMount() {
 
@@ -37,57 +38,61 @@ class KnowledgeBase extends Component {
             )
             .then(async ([ contentJson, categoriesJson ]) => {
 
-                const sortedContent    = await this.contentSorter(contentJson, categoriesJson)
-                const knowledgeCards   = await this.categoryCardsBuilder(categoriesJson, sortedContent)
+                const sortedContent    = await this.contentSorter(contentJson, categoriesJson);
+                const knowledgeCards   = await this.categoryCardsBuilder(sortedContent);
+                const homeTabs         = await this.homeTabsBuilder(contentJson);
 
                 await this.setState({
                     content:        contentJson,
                     categories:     categoriesJson,
+                    homeTabs:       homeTabs,
                     knowledgeCards: knowledgeCards,
                     isLoaded:       true,
-                })
-
-                if (Object.keys(this.state.content).length === 0) {
-                    console.log('Erreur du chargement du contenu')
-                }
-                if (Object.keys(this.state.categories).length === 0) {
-                    console.log('Erreur du chargement des categories')
-                }
+                });
         })
             .catch((e) => {
                 this.setState({
-                    hasError: e
-                })
+                    hasError: e,
+                });
             });
-
     }
     
-    async categoryCardsBuilder(categories, content) {
-        const categoryCards = []
+    async categoryCardsBuilder(content) {
+        const categoryCards = [];
 
         for (let [key, value] of Object.entries(content)) {
 
             categoryCards.push(
-                <CategoryCard data={value}
-                              key={key} />)
+                <CategoryCard data={value} key={key} />);
         }
 
         return categoryCards;
     }
 
+    homeTabsBuilder(content) {
+        const categoryName = 'News'
+
+        const contentObj = content.filter(
+            page =>
+                page['category'] === categoryName
+        );
+
+        return <HomeTabs data={contentObj} key={categoryName} />
+    }
+
     async contentSorter(content, categories) {
-        const contentObj  = {}
+        const contentObj = {};
 
         for (const category of categories)
         {
-            const categoryName          = await category['category_name']
+            const categoryName          = await category['category_name'];
             contentObj[categoryName]    = await content.filter(
                 page =>
                     page['category'] === categoryName
-            )
-            contentObj[categoryName]['details'] = await category
+            );
+            contentObj[categoryName]['details'] = await category;
         }
-        return contentObj
+        return contentObj;
     }
 
     loading () {
@@ -100,8 +105,8 @@ class KnowledgeBase extends Component {
 
       if (this.state.hasError) {
           return (
-              <div>Erreur!</div>
-          )
+              <div>Erreur du chargement du contenu</div>
+          );
       }
         
       if (!this.state.isLoaded) {
@@ -112,18 +117,19 @@ class KnowledgeBase extends Component {
                       <span className="sr-only">Loading...</span>
                   </div>
               </div>
-          )
-          
+          );
       } 
       
       else {
-          const { knowledgeCards } = this.state
+          const { knowledgeCards, homeTabs } = this.state;
           
           return (
               <div className="app flex-row align-items-center">
                   <Container className="m-auto">
                       <div className="animated fadeIn">
-                      <HomeTabs />
+                          {
+                              homeTabs
+                          }
                       <Row className="justify-content-center mt-2">
                           <Col className="firstCol" md="12">
                               <CardGroup className="animated fadeIn">

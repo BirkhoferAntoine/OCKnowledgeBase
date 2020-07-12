@@ -1,6 +1,7 @@
 import CategoryCard from "./CategoryCard";
 import KnowledgePage from "./KnowledgePage";
 import SubCategoryAccordion from './CategoryCard/SubCategoryAccordion/SubCategoryAccordion';
+import PagesList from "./CategoryCard/SubCategoryAccordion/PagesList";
 import HomeTabs from "./HomeTabs";
 import DefaultLayout from './DefaultLayout';
 import {
@@ -34,7 +35,7 @@ import CategoryPage from "./CategoryPage";
 
 export {
     DefaultLayout, CategoryCard, KnowledgePage,
-    SubCategoryAccordion, HomeTabs, CategoryPage,
+    SubCategoryAccordion, HomeTabs, CategoryPage, PagesList,
     Colors, Typography, Widgets, Alerts, Badges, Modals,
     CoreUIIcons, Flags, FontAwesome, SimpleLineIcons, Dashboard,
     Charts, ButtonDropdowns, ButtonGroups, Buttons, BrandButtons,

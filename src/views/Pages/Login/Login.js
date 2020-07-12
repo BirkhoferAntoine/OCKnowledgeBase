@@ -43,7 +43,7 @@ class Login extends Component {
         await fetch(urlPost, init)
             .then(async (response) => {
                 const json = await response.json()
-                if (response.status === 301) await this.login(json)
+                if (response.status === 301) this.login(json);
                 if (response.status === 401) return await json; // or .text() or .blob() ...
             })
             .then((text) => {
@@ -59,8 +59,9 @@ class Login extends Component {
     login(token)
     {
         const { cookies } = this.props;
-        cookies.set('token', token, { path: '/' });
-        window.location.assign("/dashboard");
+        cookies.set('token', token, { path: '/', secure: true });
+        window.location.replace("/#/dashboard");
+        window.location.reload(true);
     }
     
   render() {

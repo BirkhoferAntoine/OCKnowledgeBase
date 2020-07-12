@@ -43,11 +43,7 @@ class Edit extends Component {
                 this.setState({
                     page: contentJson[0],
                     isLoaded: true,
-                })
-
-                if (Object.keys(this.state.page).length === 0) {
-                    console.log('Erreur du chargement du contenu')
-                }
+                });
             })
             .catch((e) => {
                 this.setState({
@@ -81,11 +77,19 @@ class Edit extends Component {
 
         fetch(urlPost, init)
             .then((response) => {
-                alert('sent')
-                return response.json(); // or .text() or .blob() ...
+                if (response.status === 200) {
+                    window.location.replace("/#/dashboard/editor/edit");
+                    return window.location.reload(true);
+                }
+                if (response.status === 401) {
+                    const { cookies } = this.props;
+                    cookies.remove('token');
+                    alert(response.json());
+                    window.location.replace("/#/login");
+                    return window.location.reload(true);
+                }
             })
             .then((text) => {
-                alert(text)
             })
             .catch((e) => {
                 alert(`Erreur lors de la transmission  , ${e}`)
@@ -96,7 +100,7 @@ class Edit extends Component {
 
         if (this.state.hasError) {
             return (
-                <div>Erreur!</div>
+                <div>Erreur du chargement du contenu</div>
             )
         }
 

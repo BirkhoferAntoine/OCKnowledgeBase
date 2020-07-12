@@ -6,9 +6,9 @@ class CategoryCard extends Component {
 
     constructor(props) {
         super(props);
-        this.toggleAccordion = this.toggleAccordion.bind(this);
+        this.toggleAccordion    = this.toggleAccordion.bind(this);
         this.accordionMaker     = this.accordionMaker.bind(this);
-        this.subCategorySorter      = this.subCategorySorter.bind(this);
+        this.subCategorySorter  = this.subCategorySorter.bind(this);
         this.state = {
             data:           props.data,
             details:        props.data.details,

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { Badge, UncontrolledDropdown, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, Input, Form } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, Input, Form } from 'reactstrap';
 import PropTypes from 'prop-types';
-
-import { AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 
 const propTypes = {
   children: PropTypes.node,

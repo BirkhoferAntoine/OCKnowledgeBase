@@ -54,11 +54,19 @@ class Upload extends Component {
 
         fetch(urlPost, init)
             .then((response) => {
-                alert('sent')
-                return response.json(); // or .text() or .blob() ...
+                if (response.status === 200) {
+                    window.location.replace("/#/dashboard/images/gallery");
+                    return window.location.reload(true);
+                }
+                if (response.status === 401) {
+                    const { cookies } = this.props;
+                    cookies.remove('token');
+                    alert(response.json());
+                    window.location.replace("/#/login");
+                    return window.location.reload(true);
+                }
             })
             .then((text) => {
-                alert(text)
             })
             .catch((e) => {
                 alert(`Erreur lors de la transmission  , ${e}`)

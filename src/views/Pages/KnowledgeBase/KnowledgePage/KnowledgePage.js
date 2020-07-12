@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { Container, Card, CardBody, CardFooter, CardHeader, CardGroup, Col,
        Row, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import { withRouter } from "react-router";
-import {isEmptyValue} from "enzyme/src/Utils";
 import DOMPurify from 'dompurify';
 import he from 'he';
 
@@ -20,6 +19,7 @@ class KnowledgePage extends Component {
         this.state = {
             hasError:       false,
             page:           props.data,
+            background:     null,
             pagesArray:     [],
             currentPage:    0,
             lastPage:       0,
@@ -40,20 +40,39 @@ class KnowledgePage extends Component {
             .then((resContent) => {
                 return resContent.json();
             })
-            .then((contentJson) => {
+            .then(async (contentJson) => {
 
                 const decode   = he.decode(contentJson[0].content);
                 const sanitize = DOMPurify.sanitize(decode);
+
+                const background = await contentJson[0].image;
+                if (background !== null) {
+                    const imgFetch  = `https://ockb.rongeasse.com/api/v1/getimage?image=${background}`;
+                    await fetch(imgFetch)
+                        .then((resImg) => {
+                            if (resImg.status === 200) {
+                                return resImg.json();
+                            } else {
+                                return false;
+                            }
+                        })
+                        .then(async (imgJson) => {
+                            if (imgJson !== false) {
+                                const image = new Image();
+                                image.src   = await imgJson.src;
+                            document.getElementById('backgroundTarget')
+                                .style.backgroundImage = await image;
+                            }
+                        })
+                        .catch((e) => {
+                        });
+                }
 
                 this.setState({
                     page: contentJson[0],
                     pagesArray: this.strDivider(sanitize),
                     isLoaded: true,
                 })
-
-                if (Object.keys(this.state.page).length === 0) {
-                    console.log('Erreur du chargement du contenu')
-                }
             })
             .catch((e) => {
                 this.setState({
@@ -86,16 +105,13 @@ class KnowledgePage extends Component {
         switch (button) {
             case ('firstPage') :
                 return 0;
-                break;
             case ('previousPage') :
                 return (this.state.currentPage) -1;
-                break;
             case ('nextPage') :
                 return (this.state.currentPage) +1;
-                break;
             case ('lastPage') :
                 return this.state.lastPage -1;
-                break;
+            default: return 0;
         }
     }
 
@@ -142,7 +158,7 @@ class KnowledgePage extends Component {
 
         if (this.state.hasError) {
             return (
-                <div>Erreur!</div>
+                <div>Erreur du chargement du contenu</div>
             )
         }
 
@@ -172,14 +188,14 @@ class KnowledgePage extends Component {
                                 <Col md="12">
                                     <CardGroup className="animated fadeIn">
                                         <React.Suspense fallback={this.loading()}>
-                                                <Card className={'card-accent-primary mb-0'}
-                                                      style={{border: `2px outset ${color}`, minHeight: '70vh'}} >
+                                                <Card className={'card-accent-primary mb-0 knowledgePage'}
+                                                      style={{border: `2px outset ${color}`}} >
                                                     <CardHeader className="d-flex flex-wrap flex-column card"
                                                                 style={{borderBottom: `2px outset ${color}`, backgroundColor: color}}>
                                                         <h4 className="categoryHeader align-self-center">{page.title} </h4>
                                                         <span className="align-self-end">{formatedDate}</span>
                                                     </CardHeader>
-                                            <CardBody>
+                                                <CardBody className="cardBody" id="backgroundTarget">
                                                 <article dangerouslySetInnerHTML={this.returnHTML()}/>
                                             </CardBody>
                                                     <CardFooter className={'d-flex justify-content-center p-0'}>

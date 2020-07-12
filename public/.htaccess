@@ -1,11 +1,5 @@
-
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
-
-
 RewriteEngine On
-
+        Options -MultiViews -Indexes
 RewriteBase /
 
  # Handle Authorization Header
@@ -20,7 +14,6 @@ RewriteBase /
  # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    
     RewriteRule ^ index.php [QSA,L]
 
 Header set Access-Control-Allow-Origin: "https://knowledgebase.rongeasse.com"

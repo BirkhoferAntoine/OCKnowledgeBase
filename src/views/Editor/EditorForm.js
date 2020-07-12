@@ -10,7 +10,6 @@ import {
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import useEditorForm from "./useEditorForm";
-import DOMPurify from 'dompurify';
 
 const EditorForm = (props) => {
 
@@ -47,6 +46,7 @@ const EditorForm = (props) => {
                        id="postCategory" name="category" placeholder="Catégorie"
                        value={values.category} onChange={handleChange} >
                     <option>Catégorie</option>
+                    <option value={'News'}>News</option>
                     <option value={'HTML'}>HTML</option>
                     <option value={'CSS'}>CSS</option>
                     <option value={'JavaScript'}>JavaScript</option>
@@ -94,8 +94,6 @@ const EditorForm = (props) => {
                 <FormFeedback className="invalid-feedback">
                     {errors.image}
                 </FormFeedback>}
-
-                <FormFeedback valid className="help-block">Valide</FormFeedback>
 
                 <div className="form-actions d-flex justify-content-center m-2">
                     <Button type="submit" color="primary">Soumettre</Button>

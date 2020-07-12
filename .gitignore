@@ -6,7 +6,7 @@ vendor
 
 
 # Database connection files
-/appConfig/database.php
+/config/database.php
 
 # Tests and trashes
 
@@ -237,3 +237,5 @@ yarn-error.log*
 /public/README.md
 /public/images/sygnet.svg
 /src/assets/img/brand/sygnet.svg
+!/build/js/chunks/
+!/public/js/chunks/

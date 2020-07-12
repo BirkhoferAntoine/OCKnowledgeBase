@@ -30,10 +30,6 @@ class New extends Component {
         const urlPost       = 'https://ockb.rongeasse.com/api/v1/post';
         const headers       = new Headers();
         headers.append('Authorization', token);
-        headers.entries().map((header) => {
-            return console.log('headers', header)
-        })
-
 
         const init = {
             method: 'POST',
@@ -46,11 +42,19 @@ class New extends Component {
 
         fetch(urlPost, init)
             .then((response) => {
-                alert('sent')
-                return response.json(); // or .text() or .blob() ...
+                if (response.status === 201) {
+                    window.location.replace("/#/dashboard/editor/edit");
+                    return window.location.reload(true);
+                }
+                if (response.status === 401) {
+                    const { cookies } = this.props;
+                    cookies.remove('token');
+                    alert(response.json());
+                    window.location.replace("/#/login");
+                    return window.location.reload(true);
+                }
             })
             .then((text) => {
-                alert(text)
             })
             .catch((e) => {
                 alert(`Erreur lors de la transmission  , ${e}`)

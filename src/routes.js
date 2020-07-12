@@ -40,22 +40,20 @@ const HomeTabs      = React.lazy(() => import('./views/Pages/KnowledgeBase/HomeT
 const CategoryCard  = React.lazy(() => import('./views/Pages/KnowledgeBase/CategoryCard'));
 const KnowledgeBase = React.lazy(() => import('./views/Pages/KnowledgeBase'));
 const KnowledgePage = React.lazy(() => import('./views/Pages/KnowledgeBase/KnowledgePage'));
-//const CategoryPage  = React.lazy(() => import('./views/Pages/KnowledgeBase/CategoryPage'));
-const New           = React.lazy(()  => import('./views/Editor/New'));
+const New           = React.lazy(() => import('./views/Editor/New'));
 const EditList      = React.lazy(() => import('./views/Pages/KnowledgeBase'));
-const Edit          = React.lazy(()  => import('./views/Editor/Edit'));
+const Edit          = React.lazy(() => import('./views/Editor/Edit'));
 const DeleteList    = React.lazy(() => import('./views/Pages/KnowledgeBase'));
-const Delete        = React.lazy(()  => import('./views/Editor/Delete'));
-const UploadImage   = React.lazy(()  => import('./views/Images/Upload'));
-const Gallery       = React.lazy(()  => import('./views/Images/Gallery'));
-const EditorForm    = React.lazy(()  => import('./views/Editor/EditorForm'));
+const Delete        = React.lazy(() => import('./views/Editor/Delete'));
+const UploadImage   = React.lazy(() => import('./views/Images/Upload'));
+const Gallery       = React.lazy(() => import('./views/Images/Gallery'));
+//const CategoryPage  = React.lazy(() => import('./views/Pages/KnowledgeBase/CategoryPage'));
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
     { path: '/', exact: true, name: 'Home' },
     { path: '/knowledgebase', exact: true, name: 'KnowledgeBase', component: KnowledgeBase },
-    { path: '/knowledgebase/test', exact: true, name: 'CategoryPage', component: EditorForm },
     //{ path: '/knowledgebase/category/:search', name: 'CategoryPage', component: CategoryPage },
     { path: '/knowledgebase/page/:search', name: 'KnowledgePage', component: KnowledgePage },
     { path: '/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
