@@ -1,6 +1,7 @@
 Knowledge Base (Base de connaissance)
 
-=> API REST sécurisée (XSS/SQL)
+=> API REST sécurisée (XSS/SQL).
+
     Framework PHP Slim avec inspirations de code Laravel.
     TWIG (non nécessaire içi mais demandé par le cahier des charges) et divers packages composer.
     BDD MySQL, filtrage (whitelist) et sanitation/validation des données.
@@ -9,7 +10,8 @@ Knowledge Base (Base de connaissance)
     Token demandé pour autorisation de toute opération du CRUD.
     Environnement .env
     
-=> Front utilisant la librairie ReactJS, package Create-React-App et thème de base CoreUI React
+=> Front utilisant la librairie ReactJS, package Create-React-App et thème de base CoreUI React.
+
     Utilisation de React-router (HashRouter)
     Custom hooks pour les formulaires et validation des données.
     Manipulation des données JSON de l’API, dont images.
@@ -18,3 +20,4 @@ Knowledge Base (Base de connaissance)
     
  Possibilité par la suite de scinder en deux sites indépendants 
   ou pourquoi pas utiliser ExpressJS pour faire de l'isomorphique et éviter de potentiels problèmes de CORS
+  tout en permettant un bon référencement, de changer le hashrouter et de garder une bonne sécurité.
