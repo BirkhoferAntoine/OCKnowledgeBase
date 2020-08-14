@@ -16,6 +16,7 @@ Knowledge Base (Base de connaissance)
     Custom hooks pour les formulaires et validation des données.
     Manipulation des données JSON de l’API, dont images.
     Sanitation éventuelle des données nottament pour l'intégration HTML des données serveur.
+    Upload d'images.
     SSR du bundle WebPack avec Laravel-mix.
     
  Possibilité par la suite de scinder en deux sites indépendants 
