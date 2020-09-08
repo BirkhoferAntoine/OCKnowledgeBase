@@ -18,7 +18,3 @@ Knowledge Base (Base de connaissance)
     Sanitation éventuelle des données nottament pour l'intégration HTML des données serveur.
     Upload d'images.
     SSR du bundle WebPack avec Laravel-mix.
-    
- Possibilité par la suite de scinder en deux sites indépendants 
-  ou pourquoi pas utiliser ExpressJS pour faire de l'isomorphique et éviter de potentiels problèmes de CORS
-  tout en permettant un bon référencement, de changer le hashrouter et de garder une bonne sécurité.
