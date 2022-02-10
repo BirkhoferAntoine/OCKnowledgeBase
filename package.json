@@ -72,7 +72,7 @@
     "cross-env": "^7.0.2",
     "laravel-mix": "^5.0.4",
     "lodash": "^4.17.19",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "react-strap": "^0.0.1",
     "resolve-url-loader": "^2.3.2",
     "twig-html-loader": "^0.1.8",
